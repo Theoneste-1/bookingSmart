@@ -19,6 +19,10 @@ export function Navbar() {
 
   const navigation = [
     {
+      name: "Home",
+      href: "/",
+    },
+    {
       name: "Features",
       href: "#features",
     },

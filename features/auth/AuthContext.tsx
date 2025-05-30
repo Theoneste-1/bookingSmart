@@ -1,10 +1,10 @@
-'use client';
-'use client';
+"use client";
+"use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { clearTokens, getUserRole } from './authUtil'
-import type { TokenResponse } from '@/types/dto/authDto';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { clearTokens, getUserRole } from "./authUtil";
+import type { TokenResponse } from "@/types/dto/authDto";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -15,10 +15,11 @@ interface AuthContextType {
   checkAuth: () => boolean;
 }
 
-
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [loading, setLoading] = useState(true);
   const [userRoleData, setUserRoleData] = useState<any | null>(null);
   const [decodedJwtUser, setDecodedJwtUser] = useState<any | null>(null);
@@ -27,12 +28,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Direct check for token in localStorage
   const checkAuth = (): boolean => {
-    if (typeof window === 'undefined') return false;
-
-
-    const token = localStorage.getItem('access_token');
+    if (typeof window === "undefined") return false;
+    const token = localStorage.getItem("access_token");
     if (!token) return false;
-
     return true;
   };
 
@@ -43,7 +41,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const isAuth = checkAuth();
         setAuthenticated(isAuth);
 
-
         if (isAuth) {
           // Extract user info from token if available
           const token = localStorage.getItem("access_token");
@@ -53,8 +50,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
       } catch (error) {
-        console.error('Authentication check failed:', error);
-        console.error('Authentication check failed:', error);
+        console.error("Authentication check failed:", error);
+        console.error("Authentication check failed:", error);
         setAuthenticated(false);
       } finally {
         setLoading(false);
@@ -64,15 +61,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Check auth immediately
     checkAuthStatus();
 
-
     // Also check when window gets focus (useful for token expiry)
     const handleFocus = () => {
       checkAuthStatus();
     };
 
-
-    window.addEventListener('focus', handleFocus);
-
+    window.addEventListener("focus", handleFocus);
 
     return () => {
       window.removeEventListener("focus", handleFocus);
@@ -91,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAuthenticated(false);
     setDecodedJwtUser(null);
     setUserRoleData(null);
-    router.push('/auth/login');
+    router.push("/login");
   };
 
   const value = {
@@ -105,29 +99,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-
 };
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
 
-export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const { isAuthenticated, loading, checkAuth } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     // Double-check authentication directly from localStorage
     const isAuthLocal = checkAuth();
-
-
     if (!loading && !isAuthenticated && !isAuthLocal) {
-      router.push('/auth/login');
-      router.push('/auth/login');
+      router.push("/login");
     }
   }, [loading, isAuthenticated, router, checkAuth]);
 
@@ -141,4 +133,3 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
 
   return isAuthenticated ? <>{children}</> : null;
 };
-

@@ -1,99 +1,148 @@
-"use client"
-
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Calendar, Search, Clock, User, Settings, LogOut, Menu, X, MessageSquare } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
+import { Calendar, Clock, User, Plus, ArrowRight } from "lucide-react"
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: Calendar },
-  { name: "My Bookings", href: "/bookings", icon: Clock },
-  { name: "Find Professionals", href: "/search", icon: Search },
-  { name: "Messages", href: "/messages", icon: MessageSquare },
-  { name: "Profile", href: "/profile", icon: User },
-  { name: "Settings", href: "/settings", icon: Settings },
+const upcomingAppointments = [
+  {
+    id: 1,
+    professional: "Dr. Sarah Wilson",
+    service: "Dental Checkup",
+    date: "2024-01-15",
+    time: "10:00 AM",
+    status: "confirmed",
+    avatar: "/placeholder.svg?height=40&width=40",
+  },
+  {
+    id: 2,
+    professional: "Mike Johnson",
+    service: "Personal Training",
+    date: "2024-01-16",
+    time: "2:00 PM",
+    status: "pending",
+    avatar: "/placeholder.svg?height=40&width=40",
+  },
+  {
+    id: 3,
+    professional: "Emma Rodriguez",
+    service: "Legal Consultation",
+    date: "2024-01-18",
+    time: "11:30 AM",
+    status: "confirmed",
+    avatar: "/placeholder.svg?height=40&width=40",
+  },
 ]
 
-export function ClientSidebar() {
-  const pathname = usePathname()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+const quickActions = [
+  {
+    title: "Find Professionals",
+    description: "Search for service providers in your area",
+    icon: User,
+    href: "/search",
+    color: "bg-blue-500",
+  },
+  {
+    title: "Book Appointment",
+    description: "Schedule a new appointment",
+    icon: Plus,
+    href: "/search",
+    color: "bg-green-500",
+  },
+  {
+    title: "View Calendar",
+    description: "See all your upcoming appointments",
+    icon: Calendar,
+    href: "/bookings",
+    color: "bg-purple-500",
+  },
+]
 
+export function ClientDashboard() {
   return (
-    <>
-      {/* Mobile menu button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="fixed left-4 top-4 z-50 lg:hidden"
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-      >
-        {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </Button>
-
-      {/* Sidebar */}
-      <div
-        className={cn(
-          "fixed inset-y-0 left-0 z-40 w-64 transform bg-white shadow-lg transition-transform duration-300 ease-in-out dark:bg-slate-800 lg:static lg:translate-x-0",
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full",
-        )}
-      >
-        <div className="flex h-full flex-col">
-          {/* Logo */}
-          <div className="flex h-16 items-center px-6">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
-                <Calendar className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-slate-900 dark:text-white">BookingSmart</span>
-            </Link>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 space-y-1 px-4 py-4">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                    isActive
-                      ? "bg-blue-50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-slate-100",
-                  )}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <item.icon className="h-5 w-5" />
-                  {item.name}
-                </Link>
-              )
-            })}
-          </nav>
-
-          {/* User section */}
-          <div className="border-t border-slate-200 p-4 dark:border-slate-700">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500" />
-              <div>
-                <div className="text-sm font-medium text-slate-900 dark:text-white">John Doe</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400">Client</div>
-              </div>
-            </div>
-            <Button variant="ghost" size="sm" className="w-full justify-start text-slate-600 dark:text-slate-300">
-              <LogOut className="mr-2 h-4 w-4" />
-              Sign out
-            </Button>
-          </div>
-        </div>
+    <div className="space-y-8">
+      {/* Welcome Section */}
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Welcome back, John!</h1>
+        <p className="text-slate-600 dark:text-slate-300">Here's what's happening with your appointments.</p>
       </div>
 
-      {/* Mobile overlay */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-30 bg-black/50 lg:hidden" onClick={() => setIsMobileMenuOpen(false)} />
-      )}
-    </>
+      {/* Quick Actions */}
+      <div className="grid gap-6 md:grid-cols-3">
+        {quickActions.map((action, index) => (
+          <Card key={index} className="group cursor-pointer transition-all hover:shadow-lg">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <div
+                  className={`inline-flex h-10 w-10 items-center justify-center rounded-lg ${action.color} text-white`}
+                >
+                  <action.icon className="h-5 w-5" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg">{action.title}</CardTitle>
+                  <CardDescription>{action.description}</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Button
+                variant="ghost"
+                className="w-full justify-between group-hover:bg-slate-50 dark:group-hover:bg-slate-800"
+              >
+                Get Started
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Upcoming Appointments */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="h-5 w-5" />
+                Upcoming Appointments
+              </CardTitle>
+              <CardDescription>Your next scheduled appointments</CardDescription>
+            </div>
+            <Button variant="outline" size="sm">
+              View All
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {upcomingAppointments.map((appointment) => (
+              <div
+                key={appointment.id}
+                className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800"
+              >
+                <div className="flex items-center gap-4">
+                  <img
+                    src={appointment.avatar || "/placeholder.svg"}
+                    alt={appointment.professional}
+                    className="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700"
+                  />
+                  <div>
+                    <div className="font-medium text-slate-900 dark:text-white">{appointment.professional}</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-300">{appointment.service}</div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-medium text-slate-900 dark:text-white">
+                    {appointment.date} at {appointment.time}
+                  </div>
+                  <Badge variant={appointment.status === "confirmed" ? "default" : "secondary"} className="mt-1">
+                    {appointment.status}
+                  </Badge>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   )
 }

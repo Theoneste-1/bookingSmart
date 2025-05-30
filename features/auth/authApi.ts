@@ -1,10 +1,10 @@
-import { baseApi } from '@/features/api/rtk';
-import type { TokenResponse } from '@/types/dto/authDto';
-import type { ApiResponse } from '@/types/api';
+import { baseApi } from "@/features/api/rtk";
+import type { TokenResponse } from "@/types/dto/authDto";
+import type { ApiResponse } from "@/types/api";
 
 // Define request types based on the auth guide
 interface SignInRequest {
-  email: string;
+  emailOrUsername: string;
   password: string;
 }
 
@@ -30,9 +30,18 @@ interface ChangePasswordRequest {
 }
 
 interface RefreshTokenRequest {
-  userId: string;
+  username: string;
   refreshToken: string;
 }
+
+
+interface LoginResponse {
+  username: string;
+  token: string;
+  refreshToken: string;
+  role: string;
+}
+
 
 // Define response types
 interface OtpResponse {
@@ -40,48 +49,72 @@ interface OtpResponse {
   message: string;
 }
 
+interface SignUpRequest {
+  username: string;
+  password: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  role: string;
+  isAgreedToTerms: boolean;
+}
+
 const _enhancedAuthApi = baseApi.enhanceEndpoints({
-  addTagTypes: ['Auth'],
+  addTagTypes: ["Auth"],
 });
 
 // Inject endpoints into the base API
 export const authApi = _enhancedAuthApi.injectEndpoints({
   endpoints: (builder) => ({
-    signIn: builder.mutation<ApiResponse<OtpResponse>, SignInRequest>({
+    signIn: builder.mutation<LoginResponse, SignInRequest>({
       query: (credentials) => ({
-        url: '/users/signin',
-        method: 'POST',
+        url: "auth/login",
+        method: "POST",
         body: {
-          email: credentials.email,
+          username: credentials.emailOrUsername,
           password: credentials.password,
         },
       }),
-      invalidatesTags: ['Auth'],
+      invalidatesTags: ["Auth"],
+    }),
+    signup: builder.mutation<ApiResponse<String>, SignUpRequest>({
+      query: (data) => ({
+        url: "auth/register",
+        method: "POST",
+        body: data,
+      }),
     }),
     verifyOtp: builder.mutation<
       TokenResponse & { role_name: string; role_id: string },
       VerifyOtpRequest
     >({
       query: (verifyData) => ({
-        url: '/users/verify-otp',
-        method: 'POST',
+        url: "/users/verify-otp",
+        method: "POST",
         body: verifyData,
       }),
-      invalidatesTags: ['Auth'],
+      invalidatesTags: ["Auth"],
     }),
 
-    forgetPassword: builder.mutation<ApiResponse<OtpResponse>, ForgetPasswordRequest>({
+    forgetPassword: builder.mutation<
+      ApiResponse<OtpResponse>,
+      ForgetPasswordRequest
+    >({
       query: (data) => ({
-        url: '/users/forget-password',
-        method: 'POST',
+        url: "/users/forget-password",
+        method: "POST",
         body: data,
       }),
     }),
 
-    resetPassword: builder.mutation<ApiResponse<OtpResponse>, ResetPasswordRequest>({
+    resetPassword: builder.mutation<
+      ApiResponse<OtpResponse>,
+      ResetPasswordRequest
+    >({
       query: (data) => ({
-        url: '/users/reset-password',
-        method: 'PUT',
+        url: "/users/reset-password",
+        method: "PUT",
         body: {
           token: data.token,
           email: data.email,
@@ -92,16 +125,19 @@ export const authApi = _enhancedAuthApi.injectEndpoints({
 
     refreshToken: builder.mutation<TokenResponse, RefreshTokenRequest>({
       query: (data) => ({
-        url: '/users/refresh-token',
-        method: 'POST',
+        url: "/users/refresh-token",
+        method: "POST",
         body: data,
       }),
     }),
 
-    confirmEmail: builder.mutation<ApiResponse<OtpResponse>, { userId: string }>({
+    confirmEmail: builder.mutation<
+      ApiResponse<OtpResponse>,
+      { userId: string }
+    >({
       query: (data) => ({
         url: `/users/confirm-registration/${data.userId}`,
-        method: 'PUT',
+        method: "PUT",
       }),
     }),
   }),
@@ -116,4 +152,5 @@ export const {
   useResetPasswordMutation,
   useRefreshTokenMutation,
   useConfirmEmailMutation,
+  useSignupMutation,
 } = authApi;

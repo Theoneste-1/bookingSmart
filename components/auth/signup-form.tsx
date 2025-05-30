@@ -9,8 +9,12 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff, Loader2, User, Briefcase } from "lucide-react";
+import { useSignupMutation } from "@/features/auth/authApi";
+import {useRouter} from 'next/navigation'
 
 export function SignupForm() {
+  const router = useRouter()
+  const [signup, {isLoading:isCreating}]  = useSignupMutation()
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,27 +25,18 @@ export function SignupForm() {
     email: "",
     password: "",
     phoneNumber: "",
-    role: "CLIENT",
-    agreeToTerms: false,
+    role: "ROLE_USER",
+    isAgreedToTerms: false,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     setIsLoading(true);
-    setError(null);
-
     try {
-      const response = await axios.post("/api/auth/signup", formData);
-
-      // Handle successful signup
-      if (response.data) {
-        // You might want to redirect to login page or dashboard
-        window.location.href = "/login";
-      }
-    } catch (err) {
-      setError(
-        err.response?.data?.message || "An error occurred during signup"
-      );
+    const response = await signup(formData)
+    router.push('/login')
+      } catch (err) {
+      console.log(err)
     } finally {
       setIsLoading(false);
     }
@@ -158,7 +153,7 @@ export function SignupForm() {
           className="grid grid-cols-2 gap-4"
         >
           <div className="flex items-center space-x-2 rounded-lg border p-4 hover:bg-slate-50 dark:hover:bg-slate-800">
-            <RadioGroupItem value="CLIENT" id="client" />
+            <RadioGroupItem value="ROLE_USER" id="client" />
             <Label
               htmlFor="client"
               className="flex items-center gap-2 cursor-pointer"
@@ -168,7 +163,7 @@ export function SignupForm() {
             </Label>
           </div>
           <div className="flex items-center space-x-2 rounded-lg border p-4 hover:bg-slate-50 dark:hover:bg-slate-800">
-            <RadioGroupItem value="PROFESSIONAL" id="professional" />
+            <RadioGroupItem value="ROLE_ADMIN" id="professional" />
             <Label
               htmlFor="professional"
               className="flex items-center gap-2 cursor-pointer"
@@ -183,9 +178,9 @@ export function SignupForm() {
       <div className="flex items-center space-x-2">
         <Checkbox
           id="terms"
-          checked={formData.agreeToTerms}
+          checked={formData.isAgreedToTerms}
           onCheckedChange={(checked) =>
-            setFormData({ ...formData, agreeToTerms: checked as boolean })
+            setFormData({ ...formData, isAgreedToTerms: checked as boolean })
           }
           required
         />
@@ -210,7 +205,7 @@ export function SignupForm() {
       <Button
         type="submit"
         className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-        disabled={isLoading || !formData.agreeToTerms}
+        disabled={isLoading || !formData.isAgreedToTerms}
       >
         {isLoading ? (
           <>

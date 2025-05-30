@@ -1,7 +1,14 @@
-import { LoginForm } from "@/components/auth/login-form"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Calendar } from "lucide-react"
-import Link from "next/link"
+
+import { LoginForm } from "@/components/auth/login-form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Calendar } from "lucide-react";
+import Link from "next/link";
 
 export default function LoginPage() {
   return (
@@ -11,7 +18,9 @@ export default function LoginPage() {
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
             <Calendar className="h-6 w-6 text-white" />
           </div>
-          <span className="text-2xl font-bold text-slate-900 dark:text-white">BookingSmart</span>
+          <span className="text-2xl font-bold text-slate-900 dark:text-white">
+            BookingSmart
+          </span>
         </Link>
       </div>
 
@@ -24,12 +33,15 @@ export default function LoginPage() {
           <LoginForm />
           <div className="mt-6 text-center text-sm text-slate-600 dark:text-slate-300">
             Don't have an account?{" "}
-            <Link href="/signup" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+            <Link
+              href="/signup"
+              className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400"
+            >
               Sign up
             </Link>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

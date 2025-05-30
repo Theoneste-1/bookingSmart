@@ -9,12 +9,17 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { useSignInMutation } from "@/features/auth/authApi"
+import {useRouter} from 'next/navigation'
+import { useLoginFlow } from '@/features/auth/useAuth';
 
 export function LoginForm() {
+  const router  = useRouter()
+  const {handleSignIn} = useLoginFlow();
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
-    email: "",
+    emailOrUsername: "",
     password: "",
     rememberMe: false,
   })
@@ -22,24 +27,27 @@ export function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    setIsLoading(false)
-    // Handle login logic here
+    try {
+      const response = await handleSignIn(formData)
+      console.log("the response is ", response)
+      // router.push('/dashboard')
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="email">Email address</Label>
+        <Label htmlFor="email">Email Or Username </Label>
         <Input
-          id="email"
-          type="email"
-          placeholder="Enter your email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          id="emailOrUsername"
+          type="emailOrUsername"
+          placeholder="Enter your Email Or Username"
+          value={formData.emailOrUsername}
+          onChange={(e) => setFormData({ ...formData, emailOrUsername: e.target.value })}
           required
         />
       </div>

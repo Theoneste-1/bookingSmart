@@ -3,27 +3,27 @@ import {
   fetchBaseQuery,
   FetchBaseQueryError,
 } from "@reduxjs/toolkit/query/react";
-import type {
-  BaseQueryFn,
-  FetchArgs,
-} from "@reduxjs/toolkit/query";
+import type { BaseQueryFn, FetchArgs } from "@reduxjs/toolkit/query";
 import {
   getAccessToken,
-  getRefreshToken,
-  getUserId,
   saveTokens,
   clearTokens,
-} from '../auth/authUtil'
+  getRefreshToken,
+  getUsername,
+} from "../auth/authUtil";
 import type { TokenResponse } from "@/types/dto/authDto";
 import { Mutex } from "async-mutex";
+import { API_BASE_URL } from "@/config/api";
 
 // Create a mutex to prevent multiple refresh requests
 const mutex = new Mutex();
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:3001/api/",
+  baseUrl: API_BASE_URL,
   prepareHeaders: (headers) => {
     const token = getAccessToken();
+    console.log(token);
+
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
     }
@@ -68,7 +68,7 @@ const baseQueryWithReauth: BaseQueryFn<
     if (result.error && result.error.status === 401) {
       // Check if we have a refresh token to try
       const refreshToken = getRefreshToken();
-      const userId = getUserId();
+      const userId = getUsername();
 
       if (refreshToken && userId) {
         // Try to get a new token
@@ -79,7 +79,7 @@ const baseQueryWithReauth: BaseQueryFn<
             body: { userId, refreshToken },
           },
           api,
-          extraOptions,
+          extraOptions
         );
 
         if (refreshResult.data) {
@@ -93,14 +93,14 @@ const baseQueryWithReauth: BaseQueryFn<
           clearTokens();
           // Redirect to login page if refresh fails
           if (typeof window !== "undefined") {
-            window.location.href = "/auth/login";
+            window.location.href = "/login";
           }
         }
       } else {
         // No refresh token, logout the user
         clearTokens();
         if (typeof window !== "undefined") {
-          window.location.href = "/auth/login";
+          window.location.href = "/login";
         }
       }
     }

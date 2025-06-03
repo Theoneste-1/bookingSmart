@@ -60,9 +60,10 @@ export const useLoginFlow = () => {
       setEmail(emailOrUsername);
 
       // based on the role route him
-      if (response.role === "ROLE_ADMIN") {
+      if (response.role === "ADMIN") {
+        console.log("the response is  also ", response)
         router.push("/admin-dashboard");
-      }else if (response.role === "ROLE_USER") {
+      }else if (response.role === "USER") {
         router.push('/client-dashboard')
       }
       // router.push(`/auth/verification?email=${encodeURIComponent(email)}`);

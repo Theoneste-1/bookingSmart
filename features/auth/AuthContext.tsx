@@ -3,7 +3,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { clearTokens, getUserRole } from "./authUtil";
+import { clearTokens, getAccessToken, getUserRole } from "./authUtil";
 import type { TokenResponse } from "@/types/dto/authDto";
 
 interface AuthContextType {
@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Direct check for token in localStorage
   const checkAuth = (): boolean => {
     if (typeof window === "undefined") return false;
-    const token = localStorage.getItem("access_token");
+    const token = getAccessToken()
     if (!token) return false;
     return true;
   };

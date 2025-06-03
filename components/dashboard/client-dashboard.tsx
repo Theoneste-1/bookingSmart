@@ -38,7 +38,7 @@ const quickActions = [
     title: "Find Professionals",
     description: "Search for service providers in your area",
     icon: User,
-    href: "/search",
+    href: "/search",  
     color: "bg-blue-500",
   },
   {

@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../../../store";
-import { API_BASE_URL, API_ENDPOINTS } from "../../../config/api";
-import { User, UserRole } from "../../../types/auth";
 import { Booking, BookingStatus } from "../api/bookingApi";
 import { Review } from "../api/reviewApi";
+import { User } from "@/types/auth";
+import { RootState } from "@/store";
+import { API_BASE_URL, API_ENDPOINTS } from "@/config/api";
+import { baseApi } from "./rtk";
 
 export interface SystemSettings {
   id: number;
@@ -22,19 +23,11 @@ export interface DashboardStats {
   recentReviews: Review[];
 }
 
-export const adminApi = createApi({
-  reducerPath: "adminApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: API_BASE_URL,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.token;
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
-  tagTypes: ["User", "Professional", "Booking", "Review", "Settings"],
+
+const enhancedAdminApi = baseApi.enhanceEndpoints({
+  addTagTypes: ["AdminApi","User", "Professional", "Booking", "Review", "Settings"],
+})
+export const adminApi = enhancedAdminApi.injectEndpoints({
   endpoints: (builder) => ({
     // User Management
     getUsers: builder.query<User[], void>({

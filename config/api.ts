@@ -1,3 +1,4 @@
+
 import { UserRole } from "../types/auth";
 
 export const API_BASE_URL = "http://localhost:8080/api";
@@ -29,6 +30,9 @@ export const API_ENDPOINTS = {
     BOOKINGS: "/professionals/bookings",
     REVIEWS: "/professionals/reviews",
     EARNINGS: "/professionals/earnings",
+    CATEGORIES: "/categories",
+    AVAILABILITIES: "/availability",
+    CREATE: "/professionals"
   },
 
   // Client endpoints
@@ -46,6 +50,7 @@ export const API_ENDPOINTS = {
     BOOKINGS: "/admin/bookings",
     PAYMENTS: "/admin/payments",
     REPORTS: "/admin/reports",
+    REVIEWS: "/admin/reviews",
     SETTINGS: "/admin/settings",
   },
 

@@ -8,7 +8,8 @@ import { BarChart3, Users, FileText, Settings, Shield, LogOut, Menu, X, DollarSi
 import { cn } from "@/lib/utils"
 
 const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: BarChart3 },
+  { name: "Dashboard", href: "/admin-dashboard", icon: BarChart3 },
+  { name: "Professional Status", href: "/professional", icon: BarChart3 },
   { name: "Users", href: "/users", icon: Users },
   { name: "Reports", href: "/reports", icon: FileText },
   { name: "Revenue", href: "/revenue", icon: DollarSign },

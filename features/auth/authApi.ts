@@ -69,7 +69,7 @@ export const authApi = _enhancedAuthApi.injectEndpoints({
   endpoints: (builder) => ({
     signIn: builder.mutation<LoginResponse, SignInRequest>({
       query: (credentials) => ({
-        url: "auth/login",
+        url: "/auth/login",
         method: "POST",
         body: {
           username: credentials.emailOrUsername,
@@ -80,7 +80,7 @@ export const authApi = _enhancedAuthApi.injectEndpoints({
     }),
     signup: builder.mutation<ApiResponse<String>, SignUpRequest>({
       query: (data) => ({
-        url: "auth/register",
+        url: "/auth/register",
         method: "POST",
         body: data,
       }),
@@ -141,7 +141,7 @@ export const authApi = _enhancedAuthApi.injectEndpoints({
       }),
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 // Export hooks for usage in functional components

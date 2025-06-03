@@ -25,19 +25,33 @@ export function SignupForm() {
     email: "",
     password: "",
     phoneNumber: "",
-    role: "ROLE_USER",
+    role: "USER",
     isAgreedToTerms: false,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true);
+    console.log("the form data is ", formData);
     try {
     const response = await signup(formData)
-    router.push('/login')
+     if (response?.error?.data?.status === 400) {
+       setError(response?.error?.data?.message)
+   }else if (response?.error?.data?.status === 401) {
+    setError(response?.error?.data?.message)
+   }else if (response?.error?.data?.status === 403) {
+    setError(response?.error?.data?.message)
+   }else if (response?.error?.data?.status === 404) {
+    setError(response?.error?.data?.message)
+   }else if (response?.error?.data?.status === 500) {
+    setError(response?.error?.data?.message)
+   }else {
+     router.push('/login')
+   }
       } catch (err) {
-      console.log(err)
+      console.log("the error is ", err)
     } finally {
+      alert("the error is "+ error)
       setIsLoading(false);
     }
   };
@@ -153,7 +167,7 @@ export function SignupForm() {
           className="grid grid-cols-2 gap-4"
         >
           <div className="flex items-center space-x-2 rounded-lg border p-4 hover:bg-slate-50 dark:hover:bg-slate-800">
-            <RadioGroupItem value="ROLE_USER" id="client" />
+            <RadioGroupItem value="USER" id="client" />
             <Label
               htmlFor="client"
               className="flex items-center gap-2 cursor-pointer"
@@ -163,7 +177,7 @@ export function SignupForm() {
             </Label>
           </div>
           <div className="flex items-center space-x-2 rounded-lg border p-4 hover:bg-slate-50 dark:hover:bg-slate-800">
-            <RadioGroupItem value="ROLE_ADMIN" id="professional" />
+            <RadioGroupItem value="ADMIN" id="professional" />
             <Label
               htmlFor="professional"
               className="flex items-center gap-2 cursor-pointer"

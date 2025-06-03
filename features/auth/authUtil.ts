@@ -1,11 +1,11 @@
 import { TokenResponse } from '@/types/dto/authDto';
 import Cookies from 'js-cookie';
 
-export const ACCESS_TOKEN_KEY = 'access_token';
-export const REFRESH_TOKEN_KEY = 'refresh_token';
-export const USER_ID_KEY = 'user_id';
-export const USER_ROLE_KEY = 'user_role';
-export const USER_NAME_KEY = 'user_name'
+export const ACCESS_TOKEN_KEY = 'smart_booking_access_token';
+export const REFRESH_TOKEN_KEY = 'smart_booking_refresh_token';
+export const USER_ID_KEY = 'smart_booking_user_id';
+export const USER_ROLE_KEY = 'smart_booking_user_role';
+export const USER_NAME_KEY = 'smart_booking_user_name'
 
 
 export const saveTokens = (tokens: TokenResponse, userId?: string): void => {
